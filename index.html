@@ -1743,10 +1743,22 @@ function importFromCSV(file) {
 
       // Determine starting index and layout format
       const firstLineCells = parseCSVLine(lines[0]);
-      let startIndex = 1; // Skip header
+      let startIndex = 0; // Default to no header (start from line 0)
+
+      // Auto detect if the first line is a header by checking if blood pressure cells are non-numeric
+      const isHeader = isNaN(parseInt(firstLineCells[1], 10)) || isNaN(parseInt(firstLineCells[2], 10));
+      if (isHeader) {
+        startIndex = 1; // Skip header row
+      }
 
       // Check if it's the old format containing "ID" column
-      const isOldFormat = firstLineCells[0].toUpperCase() === 'ID';
+      let isOldFormat = false;
+      if (isHeader) {
+        isOldFormat = firstLineCells[0].toUpperCase() === 'ID';
+      } else {
+        const firstCell = firstLineCells[0] || '';
+        isOldFormat = !(firstCell.includes('/') || firstCell.includes('-') || firstCell.includes(':'));
+      }
 
       const parsedRecords = [];
       for (let i = startIndex; i < lines.length; i++) {
