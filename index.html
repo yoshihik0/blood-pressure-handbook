@@ -1196,12 +1196,18 @@ function handleKeyInput(key) {
   const newVal = currentVal + digit;
 
   if (stage === 'SYSTOLIC') {
-    // Limit to 3 digits
     if (newVal.length <= 3) {
       state.inputs[stage] = newVal;
-      // Auto advance to DIASTOLIC when 3 digits are entered (e.g., 120)
-      if (newVal.length === 3) {
-        state.currentStage = 'DIASTOLIC';
+      const firstChar = newVal.charAt(0);
+      // 頭文字が 1 または 2 であれば3桁、それ以外なら2桁で次の項目に移動する
+      if (firstChar === '1' || firstChar === '2') {
+        if (newVal.length === 3) {
+          state.currentStage = 'DIASTOLIC';
+        }
+      } else {
+        if (newVal.length === 2) {
+          state.currentStage = 'DIASTOLIC';
+        }
       }
     }
   } else if (stage === 'DIASTOLIC') {
