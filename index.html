@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>血圧手帳 - Smart BP Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <div id="app-container">
+    
+    <!-- APP HEADER -->
+    <header class="app-header">
+      <div class="header-main">
+        <div class="header-logo-title">
+          <div class="logo-badge">
+            <i data-lucide="heart" class="heart-icon"></i>
+          </div>
+          <div>
+            <h1>血圧手帳</h1>
+            <p class="subtitle">Smart BP Assistant</p>
+          </div>
+        </div>
+        <button id="toggle-guide-btn" class="guide-toggle-btn" aria-label="判定基準ガイドを表示">
+          <i data-lucide="book-open"></i>
+          <span>判定基準</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- DYNAMIC HEALTH GUIDES SECTION -->
+    <section id="guide-section" class="hidden">
+      <h3>
+        <i data-lucide="book-open"></i>
+        <span>日本高血圧学会 規格判定区分</span>
+      </h3>
+      <div class="guide-grid">
+        <div class="guide-item optimal">
+          <span class="guide-label">最適血圧</span>
+          <span class="guide-value">120未満 かつ 80未満</span>
+        </div>
+        <div class="guide-item normal">
+          <span class="guide-label">正常血圧</span>
+          <span class="guide-value">130未満 かつ 85未満</span>
+        </div>
+        <div class="guide-item high-normal">
+          <span class="guide-label">正常高値血圧</span>
+          <span class="guide-value">130〜139 または 85〜89</span>
+        </div>
+        <div class="guide-item stage1">
+          <span class="guide-label">I度高血圧</span>
+          <span class="guide-value">140〜159 または 90〜99</span>
+        </div>
+        <div class="guide-item stage2">
+          <span class="guide-label">II度高血圧</span>
+          <span class="guide-value">160〜179 または 100〜109</span>
+        </div>
+        <div class="guide-item stage3">
+          <span class="guide-label">III度高血圧</span>
+          <span class="guide-value">180以上 または 110以上</span>
+        </div>
+        <div class="guide-item ish">
+          <span class="guide-label">収縮期単独高血圧</span>
+          <span class="guide-value">140以上 かつ 90未満</span>
+        </div>
+      </div>
+      <p class="guide-footer">※家庭血圧基準。一般的に家庭血圧は医療機関での測定値より5mmHg低く評価されます。</p>
+    </section>
+
+    <!-- ACTIVE INPUT STATUS & KEYPAD -->
+    <!-- Custom Note Input -->
+    <div class="note-input-container">
+      <i data-lucide="message-square" class="note-icon"></i>
+      <input type="text" id="custom-note" placeholder="測定のメモ（服薬、体調など）" maxlength="40">
+    </div>
+
+    <!-- Meters Section -->
+    <section class="meters-container">
+      <div class="meters-grid">
+        <!-- Box: Systolic -->
+        <button id="meter-sys" class="meter-box active" data-stage="SYSTOLIC">
+          <span class="meter-label">最高血圧 (上)</span>
+          <div class="meter-value-wrapper">
+            <span id="val-sys" class="meter-val font-mono">---</span>
+            <span class="meter-unit">mmHg</span>
+          </div>
+          <div class="meter-focus-bar line-sys"></div>
+        </button>
+
+        <!-- Box: Diastolic -->
+        <button id="meter-dia" class="meter-box" data-stage="DIASTOLIC">
+          <span class="meter-label">最低血圧 (下)</span>
+          <div class="meter-value-wrapper">
+            <span id="val-dia" class="meter-val font-mono">---</span>
+            <span class="meter-unit">mmHg</span>
+          </div>
+          <div class="meter-focus-bar line-dia"></div>
+        </button>
+
+        <!-- Box: Pulse -->
+        <button id="meter-pulse" class="meter-box" data-stage="PULSE">
+          <span class="meter-label">脈拍</span>
+          <div class="meter-value-wrapper">
+            <span id="val-pulse" class="meter-val font-mono">---</span>
+            <span class="meter-unit">/分</span>
+          </div>
+          <div class="meter-focus-bar line-pulse"></div>
+        </button>
+      </div>
+
+      <!-- Live Category Badge -->
+      <div class="live-badge-wrapper">
+        <div id="live-badge" class="live-badge hidden">
+          <span>未入力</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Keypad Section -->
+    <section class="keypad-container">
+      <div class="keypad-grid">
+        <button class="key-btn" data-key="1">1</button>
+        <button class="key-btn" data-key="2">2</button>
+        <button class="key-btn" data-key="3">3</button>
+        <button class="key-btn" data-key="4">4</button>
+        <button class="key-btn" data-key="5">5</button>
+        <button class="key-btn" data-key="6">6</button>
+        <button class="key-btn" data-key="7">7</button>
+        <button class="key-btn" data-key="8">8</button>
+        <button class="key-btn" data-key="9">9</button>
+        <button class="key-btn action-key text-rose" data-key="C" aria-label="クリア">C</button>
+        <button class="key-btn" data-key="0">0</button>
+        <button class="key-btn action-key" data-key="backspace" aria-label="バックスペース">
+          <i data-lucide="delete"></i>
+        </button>
+      </div>
+
+      <div class="save-actions">
+        <button id="clear-all-inputs" class="btn btn-secondary">
+          <i data-lucide="rotate-ccw"></i>
+          <span>クリア</span>
+        </button>
+        <button id="save-record-btn" class="btn btn-primary" disabled>
+          <i data-lucide="check"></i>
+          <span>測定結果を保存</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW TABS SELECTOR -->
+    <nav class="tabs-container">
+      <div class="tabs-wrapper">
+        <button class="tab-btn active" data-tab="history">
+          <i data-lucide="calendar"></i>
+          <span>履歴</span>
+        </button>
+        <button class="tab-btn" data-tab="trends">
+          <i data-lucide="trending-up"></i>
+          <span>推移</span>
+        </button>
+        <button class="tab-btn" data-tab="stats">
+          <i data-lucide="bar-chart-2"></i>
+          <span>分析</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- DISPLAY PANEL -->
+    <main class="display-panel">
+      
+      <!-- TAB 1: HISTORY LOGS LIST -->
+      <div id="tab-content-history" class="tab-content active">
+        <div id="records-empty" class="records-empty-state">
+          <i data-lucide="clipboard" class="empty-icon"></i>
+          <p>まだ測定データがありません</p>
+          <p class="empty-sub">血圧を入力して記録してみましょう！</p>
+        </div>
+
+        <div id="records-list-wrapper" class="records-list-wrapper hidden">
+          <ul id="records-list">
+            <!-- Dynamically populated -->
+          </ul>
+
+          <div class="data-actions-footer">
+            <div class="left-actions">
+              <button id="export-csv-btn" class="btn-data-action">
+                <i data-lucide="download"></i>
+                <span>保存 (CSV)</span>
+              </button>
+              <label class="btn-data-action cursor-pointer">
+                <i data-lucide="upload"></i>
+                <span>読込 (CSV)</span>
+                <input type="file" id="import-csv-file" accept=".csv" class="hidden">
+              </label>
+            </div>
+            <button id="reset-all-btn" class="btn-data-action text-rose">
+              <i data-lucide="trash-2"></i>
+              <span>全て削除</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: TREND TIMELINE GRAPH (SVG) -->
+      <div id="tab-content-trends" class="tab-content">
+        <div class="trends-wrapper">
+          <h3 class="panel-title">過去10回の血圧推移</h3>
+          <div id="trend-chart-container" class="chart-container">
+            <!-- Dynamic SVG chart will be inserted here -->
+          </div>
+          <p class="chart-footer">
+            (最新の測定10回分の傾向推移を時系列で表示中)
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB 3: ANALYSIS / STATS -->
+      <div id="tab-content-stats" class="tab-content">
+        <div class="stats-wrapper">
+          <h3 class="panel-title">血圧判定の分布割合</h3>
+          <div class="stats-grid">
+            <div class="stat-chart-container">
+              <div id="donut-chart" class="donut-chart">
+                <!-- SVG Donut chart -->
+              </div>
+            </div>
+            <div id="stats-legend" class="stats-legend">
+              <!-- Dynamically populated legends with count/percentage -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast notifications container -->
+  <div id="toast-container"></div>
+
+</body>
+</html>
