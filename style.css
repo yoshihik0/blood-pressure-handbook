@@ -9,6 +9,16 @@
   --color-pulse: #10b981;       /* Emerald 500 */
   --color-pulse-bg: #ecfdf5;
   
+  /* Unified Classification Colors */
+  --color-green: #10b981;       /* Emerald 500 */
+  --color-green-bg: #f0fdf4;    /* Emerald 50 (slightly lighter) */
+  --color-yellow: #eab308;      /* Yellow 500 */
+  --color-yellow-bg: #fefce8;   /* Yellow 50 */
+  --color-orange: #f97316;      /* Orange 500 */
+  --color-orange-bg: #fff7ed;   /* Orange 50 */
+  --color-red: #ef4444;         /* Red 500 */
+  --color-red-bg: #fef2f2;      /* Red 50 */
+  
   --color-text-main: #1e293b;   /* Slate 800 */
   --color-text-sub: #64748b;    /* Slate 500 */
   --color-bg-app: #ffffff;
@@ -175,13 +185,13 @@ body {
   border: 1px solid rgba(217, 119, 6, 0.1);
 }
 
-.guide-item.optimal { border-left: 4px solid var(--color-pulse); }
-.guide-item.normal { border-left: 4px solid #84cc16; } /* Lime */
-.guide-item.high-normal { border-left: 4px solid #eab308; } /* Yellow */
-.guide-item.stage1 { border-left: 4px solid #f97316; } /* Orange */
-.guide-item.stage2 { border-left: 4px solid #ef4444; } /* Red */
-.guide-item.stage3 { border-left: 4px solid #b91c1c; } /* Red 700 */
-.guide-item.ish { border-left: 4px solid #a855f7; } /* Purple */
+.guide-item.optimal { border-left: 4px solid var(--color-green); }
+.guide-item.normal { border-left: 4px solid var(--color-green); }
+.guide-item.high-normal { border-left: 4px solid var(--color-green); }
+.guide-item.stage1 { border-left: 4px solid var(--color-yellow); }
+.guide-item.stage2 { border-left: 4px solid var(--color-orange); }
+.guide-item.stage3 { border-left: 4px solid var(--color-red); }
+.guide-item.ish { border-left: 4px solid var(--color-yellow); }
 
 .guide-label {
   font-size: 9px;
@@ -364,13 +374,10 @@ body {
 }
 
 /* Category colors */
-.bg-optimal { background-color: var(--color-pulse-bg); color: #065f46; border: 1px solid #a7f3d0; }
-.bg-normal { background-color: #f7fee7; color: #3f6212; border: 1px solid #d9f99d; }
-.bg-high-normal { background-color: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-.bg-stage1 { background-color: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
-.bg-stage2 { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-.bg-stage3 { background-color: #fdf2f2; color: #7f1d1d; border: 1px solid #fecaca; }
-.bg-ish { background-color: #faf5ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+.bg-green { background-color: var(--color-green-bg); color: #065f46; border-bottom: 1px solid #dcfce7 !important; }
+.bg-yellow { background-color: var(--color-yellow-bg); color: #854d0e; border-bottom: 1px solid #fef08a !important; }
+.bg-orange { background-color: var(--color-orange-bg); color: #9a3412; border-bottom: 1px solid #fed7aa !important; }
+.bg-red { background-color: var(--color-red-bg); color: #991b1b; border-bottom: 1px solid #fca5a5 !important; }
 
 /* KEYPAD SECTION */
 .keypad-container {
@@ -637,7 +644,7 @@ body {
 }
 
 .record-item:hover {
-  background-color: #fafafb;
+  filter: brightness(0.97);
 }
 
 .record-left {

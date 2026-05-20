@@ -11,15 +11,15 @@ let state = {
   showGuide: false
 };
 
-// Blood Pressure Classification based on JSH (Japanese Society of Hypertension) guidelines for home readings
+// Blood Pressure Classification based on JSH guidelines and user colors
 const CLASSIFICATIONS = {
-  OPTIMAL: { label: '最適血圧', class: 'bg-optimal', color: '#10b981', desc: '健康的な血圧レベルです。維持しましょう。' },
-  NORMAL: { label: '正常血圧', class: 'bg-normal', color: '#84cc16', desc: '正常な血圧レベルです。' },
-  HIGH_NORMAL: { label: '正常高値血圧', class: 'bg-high-normal', color: '#eab308', desc: '高血圧の一歩手前です。生活習慣を見直しましょう。' },
-  STAGE1: { label: 'I度高血圧', class: 'bg-stage1', color: '#f97316', desc: '軽度の高血圧です。食生活や運動を見直しましょう。' },
-  STAGE2: { label: 'II度高血圧', class: 'bg-stage2', color: '#ef4444', desc: '中等度の高血圧です。医師への相談をおすすめします。' },
-  STAGE3: { label: 'III度高血圧', class: 'bg-stage3', color: '#b91c1c', desc: '重度の高血圧です。早急に医師の診察を受けてください。' },
-  ISH: { label: '収縮期単独高血圧', class: 'bg-ish', color: '#a855f7', desc: '上の血圧だけが高い状態です。血管の硬化が疑われます。' }
+  OPTIMAL: { label: '最適血圧', class: 'bg-green', color: '#10b981', bg: '#f0fdf4', desc: '健康的な血圧レベルです。' },
+  NORMAL: { label: '正常血圧', class: 'bg-green', color: '#10b981', bg: '#f0fdf4', desc: '正常な血圧レベルです。' },
+  HIGH_NORMAL: { label: '正常高値血圧', class: 'bg-green', color: '#10b981', bg: '#f0fdf4', desc: '高血圧の一歩手前です。生活習慣を見直しましょう。' },
+  STAGE1: { label: 'I度高血圧', class: 'bg-yellow', color: '#eab308', bg: '#fefce8', desc: '軽度の高血圧です。食生活や運動を見直しましょう。' },
+  STAGE2: { label: 'II度高血圧', class: 'bg-orange', color: '#f97316', bg: '#fff7ed', desc: '中等度の高血圧です。医師への相談をおすすめします。' },
+  STAGE3: { label: 'III度高血圧', class: 'bg-red', color: '#ef4444', bg: '#fef2f2', desc: '重度の高血圧です。早急に医師の診察を受けてください。' },
+  ISH: { label: '収縮期単独高血圧', class: 'bg-yellow', color: '#eab308', bg: '#fefce8', desc: '上の血圧だけが高い状態です。血管の硬化が疑われます。' }
 };
 
 function classifyBloodPressure(sys, dia) {
@@ -28,24 +28,27 @@ function classifyBloodPressure(sys, dia) {
   const d = parseInt(dia, 10);
   if (isNaN(s) || isNaN(d)) return null;
 
-  // JSH Home BP guidelines:
-  // Optimal: <115 and <75
-  // Normal: <125 and <80 (and not optimal)
-  // High normal: 125-134 or 80-84
-  // Stage 1: 135-159 or 85-99
-  // Stage 2: 160-179 or 100-109
-  // Stage 3: >=180 or >=110
-  // ISH: >=135 and <85
-
+  // III度高血圧: 上：180以上 または 下：110以上
   if (s >= 180 || d >= 110) return CLASSIFICATIONS.STAGE3;
-  if ((s >= 160 && s <= 179) || (d >= 100 && d <= 109)) return CLASSIFICATIONS.STAGE2;
-  if ((s >= 135 && s <= 159) || (d >= 85 && d <= 99)) return CLASSIFICATIONS.STAGE1;
-  if (s >= 135 && d < 85) return CLASSIFICATIONS.ISH;
-  if ((s >= 125 && s <= 134) || (d >= 80 && d <= 84)) return CLASSIFICATIONS.HIGH_NORMAL;
-  if (s < 115 && d < 75) return CLASSIFICATIONS.OPTIMAL;
-  if (s < 125 && d < 80) return CLASSIFICATIONS.NORMAL;
   
-  // Fallback to high normal
+  // II度高血圧: 上：160〜179 または 下：100〜109
+  if ((s >= 160 && s <= 179) || (d >= 100 && d <= 109)) return CLASSIFICATIONS.STAGE2;
+  
+  // 収縮期単独高血圧: 上：140以上 かつ 下：90未満
+  if (s >= 140 && d < 90) return CLASSIFICATIONS.ISH;
+
+  // I度高血圧: 上：140〜159 または 下：90〜99
+  if ((s >= 140 && s <= 159) || (d >= 90 && d <= 99)) return CLASSIFICATIONS.STAGE1;
+
+  // 正常高値血圧: 上：130〜139 または 下：85〜89
+  if ((s >= 130 && s <= 139) || (d >= 85 && d <= 89)) return CLASSIFICATIONS.HIGH_NORMAL;
+  
+  // 最適血圧: 上：120未満 かつ 下：80未満
+  if (s < 120 && d < 80) return CLASSIFICATIONS.OPTIMAL;
+
+  // 正常血圧: 上：130未満 かつ 下：85未満 (且つ最適血圧の範囲外)
+  if (s < 130 && d < 85) return CLASSIFICATIONS.NORMAL;
+  
   return CLASSIFICATIONS.HIGH_NORMAL;
 }
 
@@ -273,15 +276,12 @@ function renderHistory() {
 
   state.records.forEach(record => {
     const li = document.createElement('li');
-    li.className = 'record-item';
-
     const classification = classifyBloodPressure(record.systolic, record.diastolic);
-    const dotColor = classification ? classification.color : '#94a3b8';
+    li.className = `record-item ${classification ? classification.class : ''}`;
 
     li.innerHTML = `
       <div class="record-left">
         <div class="record-time-badge">
-          <span class="indicator-dot" style="background-color: ${dotColor}"></span>
           <span class="record-time">${formatDate(record.timestamp)}</span>
         </div>
         ${record.note ? `<span class="record-note">${escapeHtml(record.note)}</span>` : ''}
