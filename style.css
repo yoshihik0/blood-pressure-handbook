@@ -374,10 +374,10 @@ body {
 }
 
 /* Category colors */
-.bg-green { background-color: var(--color-green-bg); color: #065f46; border-bottom: 1px solid #dcfce7 !important; }
-.bg-yellow { background-color: var(--color-yellow-bg); color: #854d0e; border-bottom: 1px solid #fef08a !important; }
+.bg-green { background-color: var(--color-green-bg); color: #065f46; border-bottom: 1px solid #bbf7d0 !important; }
+.bg-yellow { background-color: var(--color-yellow-bg); color: #854d0e; border-bottom: 1px solid #fef9c3 !important; }
 .bg-orange { background-color: var(--color-orange-bg); color: #9a3412; border-bottom: 1px solid #fed7aa !important; }
-.bg-red { background-color: var(--color-red-bg); color: #991b1b; border-bottom: 1px solid #fca5a5 !important; }
+.bg-red { background-color: var(--color-red-bg); color: #991b1b; border-bottom: 1px solid #fee2e2 !important; }
 
 /* KEYPAD SECTION */
 .keypad-container {
