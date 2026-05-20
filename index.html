@@ -663,8 +663,8 @@ body {
 
 .record-left {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 6px;
   flex: 1;
   min-width: 0; /* allows text truncation */
 }
@@ -1347,9 +1347,7 @@ function renderHistory() {
 
     li.innerHTML = `
       <div class="record-left">
-        <div class="record-time-badge">
-          <span class="record-time">${formatDate(record.timestamp)}</span>
-        </div>
+        <span class="record-time">${formatDate(record.timestamp)}</span>
         ${record.note ? `<span class="record-note">${escapeHtml(record.note)}</span>` : ''}
       </div>
       <div class="record-mid">
