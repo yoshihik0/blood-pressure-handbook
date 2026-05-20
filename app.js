@@ -140,9 +140,16 @@ function handleKeyInput(key) {
   } else if (stage === 'DIASTOLIC') {
     if (newVal.length <= 3) {
       state.inputs[stage] = newVal;
-      // Auto advance to PULSE when 2 digits are entered (e.g., 80)
-      if (newVal.length === 2) {
-        state.currentStage = 'PULSE';
+      // 最低血圧は、一桁目が１でなかったら２桁で次の項目に移動する
+      const firstChar = newVal.charAt(0);
+      if (firstChar === '1') {
+        if (newVal.length === 3) {
+          state.currentStage = 'PULSE';
+        }
+      } else {
+        if (newVal.length === 2) {
+          state.currentStage = 'PULSE';
+        }
       }
     }
   } else if (stage === 'PULSE') {

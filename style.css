@@ -243,9 +243,23 @@ body {
 
 /* METERS SECTION */
 .meters-container {
-  padding: 14px 16px;
+  padding: 10px 16px 4px 16px;
   background: linear-gradient(to bottom, #fafafb, #ffffff);
   border-bottom: 1px solid var(--color-border);
+}
+
+.meters-header-labels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.meter-header-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-sub);
 }
 
 .meters-grid {
@@ -258,7 +272,7 @@ body {
   background-color: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: 12px;
-  padding: 10px 6px;
+  padding: 12px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -272,13 +286,6 @@ body {
   background-color: #f8fafc;
 }
 
-.meter-label {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--color-text-sub);
-  margin-bottom: 4px;
-}
-
 .meter-value-wrapper {
   display: flex;
   align-items: baseline;
@@ -286,10 +293,11 @@ body {
 }
 
 .meter-val {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 700;
   color: #94a3b8; /* gray indicator when empty */
   transition: color var(--transition-fast);
+  line-height: 1.1;
 }
 
 .meter-unit {
@@ -340,10 +348,10 @@ body {
 
 /* Live Badge styling */
 .live-badge-wrapper {
-  margin-top: 10px;
+  margin-top: 6px;
   display: flex;
   justify-content: center;
-  height: 22px;
+  height: 20px;
 }
 
 .live-badge {
@@ -366,7 +374,7 @@ body {
 
 /* KEYPAD SECTION */
 .keypad-container {
-  padding: 12px 16px;
+  padding: 8px 16px;
   background-color: #ffffff;
   border-bottom: 1px solid var(--color-border);
 }
@@ -933,7 +941,12 @@ body {
   }
   
   .meters-container {
-    padding: 10px 12px;
+    padding: 8px 12px 4px 12px;
+  }
+  
+  .meters-header-labels {
+    gap: 8px;
+    margin-bottom: 4px;
   }
   
   .meters-grid {
@@ -941,15 +954,15 @@ body {
   }
   
   .meter-box {
-    padding: 8px 4px;
+    padding: 10px 4px;
   }
   
   .meter-val {
-    font-size: 18px;
+    font-size: 24px;
   }
   
   .keypad-container {
-    padding: 10px 12px;
+    padding: 6px 12px;
   }
   
   .keypad-grid {
