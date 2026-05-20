@@ -1686,13 +1686,13 @@ function exportToCSV() {
     return;
   }
 
-  // Header row
-  let csvContent = 'ID,最高血圧,最低血圧,脈拍,測定日時,メモ\r\n';
+  // Header row: 測定日時, 最高血圧, 最低血圧, 脈拍, メモ
+  let csvContent = '測定日時,最高血圧,最低血圧,脈拍,メモ\r\n';
 
   state.records.forEach(rec => {
     const dateStr = formatDate(rec.timestamp);
     const note = rec.note ? `"${rec.note.replace(/"/g, '""')}"` : '';
-    csvContent += `${rec.id},${rec.systolic},${rec.diastolic},${rec.pulse},${dateStr},${note}\r\n`;
+    csvContent += `${dateStr},${rec.systolic},${rec.diastolic},${rec.pulse},${note}\r\n`;
   });
 
   const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1741,31 +1741,59 @@ function importFromCSV(file) {
         return result;
       };
 
+      // Determine starting index and layout format
+      const firstLineCells = parseCSVLine(lines[0]);
+      let startIndex = 1; // Skip header
+
+      // Check if it's the old format containing "ID" column
+      const isOldFormat = firstLineCells[0].toUpperCase() === 'ID';
+
       const parsedRecords = [];
-      for (let i = 1; i < lines.length; i++) {
+      for (let i = startIndex; i < lines.length; i++) {
         const cells = parseCSVLine(lines[i]);
         if (cells.length < 4) continue;
 
-        const id = cells[0] || `imported-${Date.now()}-${i}`;
-        const sys = parseInt(cells[1], 10);
-        const dia = parseInt(cells[2], 10);
-        const pulse = parseInt(cells[3], 10);
+        let id, sys, dia, pulse, timestamp, note;
+
+        if (isOldFormat) {
+          // Format B (Old App Export): ID, 最高, 最低, 脈拍, 日時, メモ
+          id = cells[0] || `record-${Date.now()}-${i}`;
+          sys = parseInt(cells[1], 10);
+          dia = parseInt(cells[2], 10);
+          pulse = parseInt(cells[3], 10);
+
+          timestamp = Date.now() - (i * 60000);
+          if (cells[4]) {
+            const cleanDateStr = cells[4].replace(/\//g, '-');
+            const parsedTime = Date.parse(cleanDateStr);
+            if (!isNaN(parsedTime)) {
+              timestamp = parsedTime;
+            }
+          }
+          note = cells[5] || undefined;
+        } else {
+          // Format D (New Simple format): 測定日時, 最高血圧, 最低血圧, 脈拍, メモ
+          timestamp = Date.now() - (i * 60000);
+          if (cells[0]) {
+            const cleanDateStr = cells[0].replace(/\//g, '-');
+            const parsedTime = Date.parse(cleanDateStr);
+            if (!isNaN(parsedTime)) {
+              timestamp = parsedTime;
+            }
+          }
+
+          sys = parseInt(cells[1], 10);
+          dia = parseInt(cells[2], 10);
+          pulse = parseInt(cells[3], 10);
+
+          // Auto generate a safe ID in app
+          id = `record-${timestamp}-${Math.floor(Math.random() * 1000)}`;
+          note = cells[4] || undefined;
+        }
 
         if (isNaN(sys) || isNaN(dia) || isNaN(pulse)) {
           continue;
         }
-
-        // Try to parse timestamp
-        let timestamp = Date.now() - (i * 60000);
-        if (cells[4]) {
-          const cleanDateStr = cells[4].replace(/\//g, '-');
-          const parsedTime = Date.parse(cleanDateStr);
-          if (!isNaN(parsedTime)) {
-            timestamp = parsedTime;
-          }
-        }
-
-        const note = cells[5] || undefined;
 
         parsedRecords.push({
           id,
