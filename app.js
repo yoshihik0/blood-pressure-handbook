@@ -288,15 +288,12 @@ function renderHistory() {
       </div>
       <div class="record-mid">
         <div class="val-item">
-          <span class="val-item-label">最高</span>
           <span class="val-item-num color-sys font-mono">${record.systolic}</span>
         </div>
         <div class="val-item">
-          <span class="val-item-label">最低</span>
           <span class="val-item-num color-dia font-mono">${record.diastolic}</span>
         </div>
         <div class="val-item">
-          <span class="val-item-label">脈拍</span>
           <span class="val-item-num color-pulse font-mono">${record.pulse}</span>
         </div>
       </div>

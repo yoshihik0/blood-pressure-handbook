@@ -83,14 +83,10 @@
 
     <!-- Meters Section -->
     <section class="meters-container">
-      <div class="meters-header-labels">
-        <span class="meter-header-label">最高血圧 (上)</span>
-        <span class="meter-header-label">最低血圧 (下)</span>
-        <span class="meter-header-label">脈拍</span>
-      </div>
       <div class="meters-grid">
         <!-- Box: Systolic -->
         <button id="meter-sys" class="meter-box active" data-stage="SYSTOLIC">
+          <span class="meter-label">最高血圧 (上)</span>
           <div class="meter-value-wrapper">
             <span id="val-sys" class="meter-val font-mono">---</span>
             <span class="meter-unit">mmHg</span>
@@ -100,6 +96,7 @@
 
         <!-- Box: Diastolic -->
         <button id="meter-dia" class="meter-box" data-stage="DIASTOLIC">
+          <span class="meter-label">最低血圧 (下)</span>
           <div class="meter-value-wrapper">
             <span id="val-dia" class="meter-val font-mono">---</span>
             <span class="meter-unit">mmHg</span>
@@ -109,6 +106,7 @@
 
         <!-- Box: Pulse -->
         <button id="meter-pulse" class="meter-box" data-stage="PULSE">
+          <span class="meter-label">脈拍</span>
           <div class="meter-value-wrapper">
             <span id="val-pulse" class="meter-val font-mono">---</span>
             <span class="meter-unit">/分</span>
@@ -186,6 +184,15 @@
         </div>
 
         <div id="records-list-wrapper" class="records-list-wrapper hidden">
+          <div class="records-header">
+            <span class="rec-header-time">日時</span>
+            <div class="rec-header-values">
+              <span class="rec-header-val">最高</span>
+              <span class="rec-header-val">最低</span>
+              <span class="rec-header-val">脈拍</span>
+            </div>
+            <span class="rec-header-action"></span>
+          </div>
           <ul id="records-list">
             <!-- Dynamically populated -->
           </ul>
