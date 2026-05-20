@@ -1222,8 +1222,20 @@ function handleKeyInput(key) {
   } else if (stage === 'PULSE') {
     if (newVal.length <= 3) {
       state.inputs[stage] = newVal;
-      // Auto-save when 2 digits reach (e.g., 72)
-      if (newVal.length === 2) {
+      const firstChar = newVal.charAt(0);
+      
+      let shouldSave = false;
+      if (firstChar === '1') {
+        if (newVal.length === 3) {
+          shouldSave = true;
+        }
+      } else {
+        if (newVal.length === 2) {
+          shouldSave = true;
+        }
+      }
+
+      if (shouldSave) {
         updateInputDisplay();
         // Wait briefly for UI visual response, then save
         setTimeout(() => {
